@@ -23,7 +23,8 @@ def states():
         if 'name' in data:
             state = State(**data)
             state.save()
-            return make_response(jsonify(data), 201)
+            data2 = storage.get(State, state.id).to_dict()
+            return make_response(jsonify(data2), 201)
         return (jsonify({"error": "Missing name"}), 400)
 
 
@@ -58,4 +59,4 @@ def state(state_id):
             if key not in ignorekey:
                 setattr(state, key, value)
         state.save()
-        return jsonify(state.to_dict())
+        return jsonify(state.to_dict()), 200
