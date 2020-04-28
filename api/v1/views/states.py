@@ -1,15 +1,12 @@
 #!/usr/bin/python3
-"""States"""
 from flask import Flask, jsonify, abort, make_response, request
 from api.v1.views import app_views
 from models.state import *
 from models import storage
-from base_model import *
-
 
 @app_views.route('/states/', methods=['POST', 'GET'])
 def states():
-    """states"""
+
     if request.method == 'GET':
         all_states = storage.all(State)
         states_list = []
@@ -20,23 +17,25 @@ def states():
     if request.method == 'POST':
         data = request.get_json()
         if data is None:
-            return make_response(jsonify({'error': 'Not a Json'}), 400)
-        elif 'name' in data:
+            return (jsonify({"error": "Not a JSON"}), 400)
+        if 'name' in data:
             state = State(**data)
             state.save()
             return make_response(jsonify(data), 201)
-        return make_response(jsonify({'error': 'Missing name'}), 400)
+        return (jsonify({"error": "Missing name"}), 400)    
 
 @app_views.route('/states/<state_id>', methods=['DELETE', 'GET', 'PUT'])
 def state(state_id):
-    """states"""
-    state = storage.get(State, state_id)
+
     if request.method == 'GET':
-        if state is None:
+        try:
+            state = storage.get(State, state_id).to_dict()
+            return jsonify(state)
+        except:
             abort(404)
-        return jsonify(state.to_dict())
 
     if request.method == 'DELETE':
+        state = storage.get(State, state_id)
         if state is None:
             abort(404)
         storage.delete(state)
@@ -44,14 +43,15 @@ def state(state_id):
         return make_response(jsonify({}), 200)
 
     if request.method == 'PUT':
-        if not request.get_json():
-            return make_response(jsonify({'error': 'Not a Json'}), 400)
+        data = request.get_json()
+        if data is None:
+            return (jsonify({"error": "Not a JSON"}), 400)
+        state = storage.get(State, state_id)
         if state is None:
             abort(404)
-        data = request.get_json()
         ignorekey = ['id', 'created_at', 'updated_at']
         for key, value in data.items():
             if key not in ignorekey:
                 setattr(state, key, value)
         state.save()
-        return make_response(jsonify(state.to_dict()), 200)
+        return jsonify(state.to_dict())
