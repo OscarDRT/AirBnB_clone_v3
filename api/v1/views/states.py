@@ -24,6 +24,7 @@ def states():
             return make_response(jsonify(data), 201)
         return (jsonify({"error": "Missing name"}), 400)    
 
+
 @app_views.route('/states/<state_id>', methods=['DELETE', 'GET', 'PUT'])
 def state(state_id):
 
