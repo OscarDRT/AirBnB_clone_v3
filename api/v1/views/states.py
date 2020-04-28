@@ -1,12 +1,14 @@
 #!/usr/bin/python3
+"""States"""
 from flask import Flask, jsonify, abort, make_response, request
 from api.v1.views import app_views
 from models.state import *
 from models import storage
 
+
 @app_views.route('/states/', methods=['POST', 'GET'])
 def states():
-
+    """states"""
     if request.method == 'GET':
         all_states = storage.all(State)
         states_list = []
@@ -22,21 +24,19 @@ def states():
             state = State(**data)
             state.save()
             return make_response(jsonify(data), 201)
-        return (jsonify({"error": "Missing name"}), 400)    
+        return (jsonify({"error": "Missing name"}), 400)
 
 
 @app_views.route('/states/<state_id>', methods=['DELETE', 'GET', 'PUT'])
 def state(state_id):
-
+    """states"""
+    state = storage.get(State, state_id)
     if request.method == 'GET':
-        try:
-            state = storage.get(State, state_id).to_dict()
-            return jsonify(state)
-        except:
+        if state is None:
             abort(404)
+        return jsonify(state.to_dict())
 
     if request.method == 'DELETE':
-        state = storage.get(State, state_id)
         if state is None:
             abort(404)
         storage.delete(state)
@@ -47,7 +47,6 @@ def state(state_id):
         data = request.get_json()
         if data is None:
             return (jsonify({"error": "Not a JSON"}), 400)
-        state = storage.get(State, state_id)
         if state is None:
             abort(404)
         ignorekey = ['id', 'created_at', 'updated_at']
