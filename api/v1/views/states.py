@@ -6,7 +6,7 @@ from models.state import *
 from models import storage
 
 
-@app_views.route('/states/', methods=['POST', 'GET'])
+@app_views.route('/states/', methods=['POST', 'GET'], strict_slashes=False)
 def states():
     """Methods to State"""
     if request.method == 'GET':
@@ -27,7 +27,8 @@ def states():
         return (jsonify({"error": "Missing name"}), 400)
 
 
-@app_views.route('/states/<state_id>', methods=['DELETE', 'GET', 'PUT'])
+@app_views.route('/states/<state_id>', methods=['DELETE', 'GET', 'PUT'],
+                 strict_slashes=False)
 def state(state_id):
     """Methods to State"""
     if request.method == 'GET':
