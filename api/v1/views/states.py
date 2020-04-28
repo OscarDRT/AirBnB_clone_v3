@@ -1,12 +1,14 @@
 #!/usr/bin/python3
+"""Documentation"""
 from flask import Flask, jsonify, abort, make_response, request
 from api.v1.views import app_views
 from models.state import *
 from models import storage
 
+
 @app_views.route('/states/', methods=['POST', 'GET'])
 def states():
-
+    """Methods to State"""
     if request.method == 'GET':
         all_states = storage.all(State)
         states_list = []
@@ -22,11 +24,12 @@ def states():
             state = State(**data)
             state.save()
             return make_response(jsonify(data), 201)
-        return (jsonify({"error": "Missing name"}), 400)    
+        return (jsonify({"error": "Missing name"}), 400)
+
 
 @app_views.route('/states/<state_id>', methods=['DELETE', 'GET', 'PUT'])
 def state(state_id):
-
+    """Methods to State"""
     if request.method == 'GET':
         try:
             state = storage.get(State, state_id).to_dict()
@@ -55,4 +58,3 @@ def state(state_id):
                 setattr(state, key, value)
         state.save()
         return jsonify(state.to_dict())
-
