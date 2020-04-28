@@ -21,10 +21,10 @@ def states():
         if 'name' in data:
             state = State(**data)
             state.save()
-            return make_response(jsonify({}), 201)
-        return (jsonify({"error": "Missing name"}), 400)
+            return make_response(jsonify(data), 201)
+        return (jsonify({"error": "Missing name"}), 400)    
 
-@app_views.route('/states/<state_id>', methods=['DELETE', 'GET'])
+@app_views.route('/states/<state_id>', methods=['DELETE', 'GET', 'PUT'])
 def state(state_id):
 
     if request.method == 'GET':
@@ -41,3 +41,18 @@ def state(state_id):
         storage.delete(state)
         storage.save()
         return make_response(jsonify({}), 200)
+
+    if request.method == 'PUT':
+        data = request.get_json()
+        if data is None:
+            return (jsonify({"error": "Not a JSON"}), 400)
+        state = storage.get(State, state_id)
+        if state is None:
+            abort(404)
+        ignorekey = ['id', 'created_at', 'updated_at']
+        for key, value in data.items():
+            if key not in ignorekey:
+                setattr(state, key, value)
+        state.save()
+        return jsonify(state.to_dict())
+
