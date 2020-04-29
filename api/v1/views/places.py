@@ -41,6 +41,7 @@ def places_li(city_id):
         place.save()
         return make_response(jsonify(place.to_dict()), 201)
 
+
 @app_views.route('/places/<place_id>', methods=['GET', 'DELETE', 'PUT'],
                  strict_slashes=False)
 def my_places(place_id):
