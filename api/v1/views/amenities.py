@@ -27,7 +27,7 @@ def amenities_list():
             amenity = Amenity(**data)
             amenity.save()
             data2 = storage.get(Amenity, amenity.id).to_dict()
-            return make_response(jsonify(data2), 201)
+            return jsonify(amenity.to_dict()), 201
         return (jsonify({"error": "Missing name"}), 400)
 
 
@@ -35,12 +35,12 @@ def amenities_list():
                  strict_slashes=False)
 def amenity(amenity_id):
     """Methods to Amenity"""
-    amen = storage.get(State, amenity_id)
-    if amen is None:
+    amenity = storage.get(State, amenity_id)
+    if amenity is None:
         abort(404)
 
     if request.method == 'GET':
-        return(amen.to_dict())
+        return(amenity.to_dict())
 
     if request.method == 'DELETE':
         storage.delete(Amenity)
@@ -54,6 +54,6 @@ def amenity(amenity_id):
         ignorekey = ['id', 'created_at', 'updated_at']
         for key, value in data.items():
             if key not in ignorekey:
-                setattr(amen, key, value)
-        amen.save()
-        return jsonify(amen.to_dict()), 200
+                setattr(amenity, key, value)
+        amenity.save()
+        return jsonify(amenity.to_dict()), 200
