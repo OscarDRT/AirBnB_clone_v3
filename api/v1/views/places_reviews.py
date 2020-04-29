@@ -37,7 +37,7 @@ def reviews(place_id):
         data['place_id'] = place_id
         review = Review(**data)
         review.save()
-        return jsonify(review.to_dict()), 200
+        return jsonify(review.to_dict()), 201
 
 
 @app_views.route('/reviews/<review_id>', methods=['GET', 'DELETE', 'PUT'],
