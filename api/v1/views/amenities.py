@@ -27,7 +27,7 @@ def amenities_list():
             amenity = Amenity(**data)
             amenity.save()
             data2 = storage.get(Amenity, amenity.id).to_dict()
-            return jsonify(amenity.to_dict()), 201
+            return jsonify(data2), 201
         return (jsonify({"error": "Missing name"}), 400)
 
 
