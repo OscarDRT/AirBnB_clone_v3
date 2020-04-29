@@ -32,14 +32,14 @@ def places_li(city_id):
             return (jsonify({"error": "Missing user_id"}), 400)
         if storage.get(User, data['user_id']) is None:
             abort(404)
-        if 'name' not in data: 
+        if 'name' not in data:
             return (jsonify({"error": "Missing name"}), 400)
         if storage.get(User, data['user_id']) is None:
             abort(404)
         data['city_id'] = city_id
         place = Place(**data)
         place.save()
-        return make_response(jsonify(place.to_dict()), 201)        
+        return make_response(jsonify(place.to_dict()), 201)
 
 @app_views.route('/places/<place_id>', methods=['GET', 'DELETE', 'PUT'],
                  strict_slashes=False)
