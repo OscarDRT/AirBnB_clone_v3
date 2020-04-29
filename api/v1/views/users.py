@@ -55,5 +55,5 @@ def user(user_id):
         for key, value in data.items():
             if key not in ignorekey:
                 setattr(user, key, value)
-        city.save()
+        user.save()
         return jsonify(user.to_dict()), 200
