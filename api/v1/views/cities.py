@@ -7,7 +7,8 @@ from models.city import *
 from models import storage
 
 
-@app_views.route('/states/<state_id>/cities', methods=['GET', 'POST'], strict_slashes=False)
+@app_views.route('/states/<state_id>/cities', methods=['GET', 'POST'],
+                 strict_slashes=False)
 def cities_li(state_id):
     """cities"""
     state = storage.get(State, state_id)
@@ -35,16 +36,17 @@ def cities_li(state_id):
         return (jsonify({"error": "Missing name"}), 400)
 
 
-@app_views.route('/cities/<city_id>', methods=['GET', 'DELETE', 'PUT'], strict_slashes=False)
+@app_views.route('/cities/<city_id>', methods=['GET', 'DELETE', 'PUT'],
+                 strict_slashes=False)
 def my_city(city_id):
     """city"""
     city = storage.get(City, city_id)
     if city is None:
-            abort(404)
+        abort(404)
 
     if request.method == 'GET':
         return jsonify(city.to_dict())
-    
+
     if request.method == 'DELETE':
         storage.delete(city)
         storage.save()
