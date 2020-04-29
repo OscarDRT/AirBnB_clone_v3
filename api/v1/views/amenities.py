@@ -43,7 +43,7 @@ def amenity(amenity_id):
         return(amenity.to_dict())
 
     if request.method == 'DELETE':
-        storage.delete(Amenity)
+        storage.delete(amenity)
         storage.save()
         return jsonify({}), 200
 
