@@ -57,7 +57,7 @@ def review(review_id):
 
     if request.method == 'PUT':
         data = request.get_json()
-        if data in None:
+        if data is None:
             return (jsonify({"error": "Not a JSON"}), 400)
         ignorekey = ['id', 'user_id', 'place_id', 'created_at', 'updated_at']
         for key, value in data.items():
