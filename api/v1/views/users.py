@@ -18,7 +18,7 @@ def users():
         return jsonify(users_list)
 
     if request.method == 'POST':
-        data = request.get_json
+        data = request.get_json()
         if data is None:
             return (jsonify({"error": "Not a JSON"}), 400)
         if 'email' not in data:
@@ -27,8 +27,7 @@ def users():
             return (jsonify({"error": "Missing password"}), 400)
         user = User(**data)
         user.save()
-        data2 = storage.get(User, user.id).to_dict()
-        return make_response(jsonify(data2), 201)
+        return make_response(jsonify(user.to_dict()), 201)
 
 
 @app_views.route('users/<user_id>', methods=['DELETE', 'GET', 'PUT'],
