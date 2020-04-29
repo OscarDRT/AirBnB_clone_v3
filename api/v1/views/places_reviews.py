@@ -20,7 +20,8 @@ def reviews(place_id):
     if request.method == 'GET':
         all_reviews = []
         for key, value in storage.all(Review).items():
-            all_reviews.append(value.to_dict())
+            if value.place_id == str(place_id):
+                all_reviews.append(value.to_dict())
         return jsonify(all_reviews)
 
     if request.method == 'POST':
