@@ -32,13 +32,13 @@ def states():
                  strict_slashes=False)
 def state(state_id):
     """Methods to State"""
-     state = storage.get(State, state_id).to_dict()
-     if state is None:
-         abort(404)
+    state = storage.get(State, state_id).to_dict()
+    if state is None:
+        abort(404)
 
     if request.method == 'GET':
         return jsonify(state)
- 
+
     if request.method == 'DELETE':
         storage.delete(state)
         storage.save()
