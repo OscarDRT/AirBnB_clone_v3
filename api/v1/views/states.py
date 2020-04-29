@@ -32,17 +32,14 @@ def states():
                  strict_slashes=False)
 def state(state_id):
     """Methods to State"""
-    if request.method == 'GET':
-        try:
-            state = storage.get(State, state_id).to_dict()
-            return jsonify(state)
-        except:
-            abort(404)
+     state = storage.get(State, state_id).to_dict()
+     if state is None:
+         abort(404)
 
+    if request.method == 'GET':
+        return jsonify(state)
+ 
     if request.method == 'DELETE':
-        state = storage.get(State, state_id)
-        if state is None:
-            abort(404)
         storage.delete(state)
         storage.save()
         return make_response(jsonify({}), 200)
@@ -51,9 +48,6 @@ def state(state_id):
         data = request.get_json()
         if data is None:
             return (jsonify({"error": "Not a JSON"}), 400)
-        state = storage.get(State, state_id)
-        if state is None:
-            abort(404)
         ignorekey = ['id', 'created_at', 'updated_at']
         for key, value in data.items():
             if key not in ignorekey:
