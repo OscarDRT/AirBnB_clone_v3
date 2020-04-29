@@ -4,6 +4,8 @@ from flask import Flask, jsonify, abort, make_response, request
 from api.v1.views import app_views
 from models.city import *
 from models import storage
+from models.user import *
+from models.place import Place
 
 
 @app_views.route('/cities/<city_id>/places', methods=['GET', 'POST'],
@@ -18,9 +20,9 @@ def places_li(city_id):
         places_list = []
 
         for key, value in storage.all('Place').items():
-            if value.state_id == str(state_id):
+            if value.city_id == str(city_id):
                 places_list.append(value.to_dict())
-        return jsonify(cities_list)
+        return jsonify(places_list)
 
     if request.method == 'POST':
         data = request.get_json()
@@ -28,10 +30,13 @@ def places_li(city_id):
             return (jsonify({"error": "Not a JSON"}), 400)
         if 'user_id' not in data:
             return (jsonify({"error": "Missing user_id"}), 400)
+        if storage.get(User, data['user_id']) is None:
+            abort(404)
         if 'name' not in data: 
             return (jsonify({"error": "Missing name"}), 400)
         if storage.get(User, data['user_id']) is None:
             abort(404)
+        data['city_id'] = city_id
         place = Place(**data)
         place.save()
         return make_response(jsonify(place.to_dict()), 201)        
