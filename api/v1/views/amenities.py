@@ -11,9 +11,9 @@ from models import storage
 @app_views.route('/amenities', methods=['GET', 'POST'],
                  strict_slashes=False)
 def amenities_list():
-    all_amenities = storage.all(Amenity)
 
     if request.method == 'GET':
+        all_amenities = storage.all(Amenity)
         amenities = []
         for key, value in all_amenities.items():
             amenities.append(value.to_dict())
@@ -35,7 +35,7 @@ def amenities_list():
                  strict_slashes=False)
 def amenity(amenity_id):
     """Methods to Amenity"""
-    amenity = storage.get(State, amenity_id)
+    amenity = storage.get(Amenity, amenity_id)
     if amenity is None:
         abort(404)
 
